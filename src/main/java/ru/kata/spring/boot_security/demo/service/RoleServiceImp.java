@@ -50,15 +50,16 @@ public class RoleServiceImp implements RoleService {
     public Role findByRole(String role) {
         return roleRepository.findByRole(role);
     }
+
     @Override
-    public Role getByName(String roleName)  {
+    public Role getByName(String roleName) {
         return roleRepository.findByRole(roleName);
     }
 
     @Override
-    public Set <Role> getRoles(String [] role) {
-        Set <Role> roles = new HashSet<>();
-        for (String r : role){
+    public Set<Role> getRoles(String[] role) {
+        Set<Role> roles = new HashSet<>();
+        for (String r : role) {
             roles.add(getByName(r));
         }
         return roles;

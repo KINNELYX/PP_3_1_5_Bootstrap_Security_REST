@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UsersRepository;
 
 import java.util.List;
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class UserServiceImp implements UserService, UserDetailsService {
 
     private final UsersRepository usersRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImp(UsersRepository usersRepository) {
+    public UserServiceImp(UsersRepository usersRepository, RoleRepository roleRepository) {
         this.usersRepository = usersRepository;
+        this.roleRepository = roleRepository;
     }
 
 
@@ -79,5 +82,17 @@ public class UserServiceImp implements UserService, UserDetailsService {
             throw new UsernameNotFoundException(String.format("Email '\s' not found in data base", email));
         }
         return user;
+    }
+
+    @Transactional
+    @Override
+    public void update(int id, User updatedUser) {
+        User userOnUpdate = usersRepository.findById(id).orElse(null);
+        updatedUser.setId(id);
+        assert userOnUpdate != null;
+        if (updatedUser.getRoles().isEmpty()) {
+            updatedUser.setRoles(userOnUpdate.getRoles());
+        }
+        saveUser(updatedUser);
     }
 }

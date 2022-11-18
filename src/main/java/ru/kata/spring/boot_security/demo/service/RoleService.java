@@ -1,10 +1,8 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import ru.kata.spring.boot_security.demo.entity.Role;
-import ru.kata.spring.boot_security.demo.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface RoleService {
@@ -20,5 +18,5 @@ public interface RoleService {
 
     Role getByName(String roleName);
 
-    Set <Role> getRoles (String [] role);
+    Set<Role> getRoles(String[] role);
 }

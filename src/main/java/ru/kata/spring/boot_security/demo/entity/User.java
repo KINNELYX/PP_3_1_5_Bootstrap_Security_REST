@@ -1,7 +1,5 @@
 package ru.kata.spring.boot_security.demo.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -95,7 +93,7 @@ public class User implements UserDetails {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-    @JsonIgnore
+
     public String getUsername() {
         return email;
     }
@@ -132,6 +130,7 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
     @JsonIgnore
     public boolean isEnabled() {
         return enabled;

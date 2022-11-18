@@ -35,17 +35,4 @@ public class AdminController {
         model.addAttribute("user", user);
         return "admin";
     }
-
-    @PostMapping("/new")
-    public String saveUser(@ModelAttribute User user) {
-        userService.saveUser(user);
-        return "redirect:/admin";
-    }
-
-
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable(name = "id") int id) {
-        userService.deleteUser(id);
-        return "redirect:/admin";
-    }
 }

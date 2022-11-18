@@ -40,6 +40,7 @@ public class Role implements GrantedAuthority {
     public Role() {
 
     }
+
     public int getId() {
         return id;
     }
@@ -62,7 +63,6 @@ public class Role implements GrantedAuthority {
     }
 
     @Override
-    @JsonIgnore
     public String getAuthority() {
         return getRole();
     }

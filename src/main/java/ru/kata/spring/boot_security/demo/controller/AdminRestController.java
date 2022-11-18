@@ -5,22 +5,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.exception.NoSuchUserException;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/admin")
+@RequestMapping(value = "/api/")
 public class AdminRestController {
     private final UserService userService;
+    private final RoleService roleService;
 
 
     @Autowired
-    public AdminRestController(UserService userService) {
+    public AdminRestController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/users")
@@ -40,16 +46,16 @@ public class AdminRestController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/users")
     public ResponseEntity<User> addNewUser(@RequestBody User user) {
         HttpHeaders headers = new HttpHeaders();
         userService.saveUser(user);
         return new ResponseEntity<>(user, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("/users/update")
-    public ResponseEntity<User> editUser(@RequestBody User user) {
-        userService.saveUser(user);
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> editUser(@RequestBody User user, @PathVariable int id) {
+        userService.update(id, user);
         return new ResponseEntity<>(user, HttpStatus.OK);
 
     }
@@ -62,5 +68,16 @@ public class AdminRestController {
             userService.deleteUser(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
+    }
+
+    @GetMapping(value = "/user")
+    public ResponseEntity<User> usersPage(Principal principal) {
+        UserDetails user = userService.loadUserByUsername(principal.getName());
+        return new ResponseEntity<>(userService.findByEmail(user.getUsername()), HttpStatus.OK);
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return new ResponseEntity<>(roleService.allRoles(), HttpStatus.OK);
     }
 }
