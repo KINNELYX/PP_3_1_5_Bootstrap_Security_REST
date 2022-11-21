@@ -32,7 +32,6 @@ async function getUsersTable() {
             $('#allUserTable').append(userRow);
         })
     })
-
 }
 
 async function getDeleteModalData(id) {
@@ -64,9 +63,8 @@ async function deleteUser() {
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(res => {
-        $('#' + getUsersTable().id).remove(res);
     })
+    document.getElementsByTagName('tr')[document.forms["formDeleteUser"].id.value].remove();
     //await getUsersTable();
 }
 
@@ -104,7 +102,7 @@ async function editUser() {
     let roles = [];
     for (let i in options) {
         if (options[i].selected) {
-            roles.push({
+             roles.push({
                 id: options[i].value,
                 name: options[i].text
             })
@@ -118,6 +116,7 @@ async function editUser() {
         email: formEdit.email.value,
         password: formEdit.password.value,
         roles: roles
+
     }
     await fetch("/api/users/" + document.forms["formEditUser"].id.value, {
         method: 'PUT',
@@ -125,10 +124,26 @@ async function editUser() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(user)
-    }).then(() => {
-        $('#' + getUsersTable().id).appendChild(document);
-    });
-    //await getUsersTable();
+
+    })
+
+
+    $(document.getElementsByTagName('tr')[document.forms["formEditUser"].id.value]).replaceWith(`
+    <tr class="item-id-${user.id}">
+      <td>${user.id}</td>
+      <td>${user.firstName}</td>
+      <td>${user.lastName}</td>
+      <td>${user.age}</td>
+      <td>${user.email}</td>
+       <td>${roles.map(role => " " + role.name)}</td>
+      <td> 
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="buttonEdit"
+              data-action="edit" data-id="${user.id}" data-bs-target="#editUserModal" onclick="getEditModalData(${user.id})">Edit</button></td>
+      <td>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" id="buttonDelete"
+              data-action="delete" data-id="${user.id}" data-bs-target="#deleteUserModal" onclick="getDeleteModalData(${user.id})">Delete</button>
+      </td>
+    </tr>`)
 }
 
 async function getNewUserRolesField() {
