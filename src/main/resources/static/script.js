@@ -64,8 +64,10 @@ async function deleteUser() {
         headers: {
             'Content-Type': 'application/json'
         }
-    });
-    await getUsersTable();
+    }).then(res => {
+        $('#' + getUsersTable().id).remove(res);
+    })
+    //await getUsersTable();
 }
 
 async function getEditModalData(id) {
@@ -123,8 +125,10 @@ async function editUser() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(user)
+    }).then(() => {
+        $('#' + getUsersTable().id).appendChild(document);
     });
-    await getUsersTable();
+    //await getUsersTable();
 }
 
 async function getNewUserRolesField() {
@@ -172,7 +176,7 @@ async function addNewUser(event) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(user)
-    });
+    })
     await getUsersTable();
     $('#users-table-tab').click();
     formAddNew.reset();
